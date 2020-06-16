@@ -1,6 +1,6 @@
 using System;
 
-namespace EstateApp.Models
+namespace EstateApp.Web.Models
 {
     public class ErrorViewModel
     {
