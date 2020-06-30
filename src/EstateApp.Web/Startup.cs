@@ -38,12 +38,11 @@ namespace EstateApp.Web {
                     })
             );
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<AuthenticationDbContext>()
-            .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole> ()
+                .AddEntityFrameworkStores<AuthenticationDbContext> ()
+                .AddDefaultTokenProviders ();
 
-            services.Configure<IdentityOptions>(options => 
-            {
+            services.Configure<IdentityOptions> (options => {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireLowercase = false;
@@ -57,7 +56,7 @@ namespace EstateApp.Web {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env,IServiceProvider svp ) {
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp) {
             if (env.IsDevelopment ()) {
                 app.UseDeveloperExceptionPage ();
             } else {
@@ -79,7 +78,7 @@ namespace EstateApp.Web {
             });
 
             MigrateDatabaseContext (svp);
-            CreateDefaultRolesAndUser(svp).GetAwaiter().GetResult();
+            CreateDefaultRolesAndUser (svp).GetAwaiter ().GetResult ();
 
         }
 
@@ -96,22 +95,18 @@ namespace EstateApp.Web {
             var userEmail = "admin@estateapp.com";
             var userPassword = "SuperSecretPassword@2020";
 
-             var roleManager = svp.GetRequiredService<RoleManager<IdentityRole>>();
-            foreach(var role in roles)
-            {   
-                var roleExists = await roleManager.RoleExistsAsync(role);
-                if (!roleExists)
-                {
-                     await roleManager.CreateAsync(new IdentityRole{ Name = role });
+            var roleManager = svp.GetRequiredService<RoleManager<IdentityRole>> ();
+            foreach (var role in roles) {
+                var roleExists = await roleManager.RoleExistsAsync (role);
+                if (!roleExists) {
+                    await roleManager.CreateAsync (new IdentityRole { Name = role });
                 }
             }
 
             var userManager = svp.GetRequiredService<UserManager<ApplicationUser>> ();
             var user = await userManager.FindByEmailAsync (userEmail);
-            if (user is null) 
-            {
-                user = new ApplicationUser 
-                {
+            if (user is null) {
+                user = new ApplicationUser {
                     Email = userEmail,
                     UserName = userEmail,
                     EmailConfirmed = true,
@@ -120,9 +115,9 @@ namespace EstateApp.Web {
 
                 };
 
-                await userManager.CreateAsync(user, userPassword);
-                await userManager.AddToRolesAsync(user, roles);
-            } 
+                await userManager.CreateAsync (user, userPassword);
+                await userManager.AddToRolesAsync (user, roles);
+            }
         }
     }
 }
